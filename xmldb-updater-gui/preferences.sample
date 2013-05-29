@@ -1,0 +1,6 @@
+updates.folder = /updates
+
+database.vendor = MySQL
+database.url = jdbc:mysql://localhost:3306/database
+database.username = user
+database.password = password
