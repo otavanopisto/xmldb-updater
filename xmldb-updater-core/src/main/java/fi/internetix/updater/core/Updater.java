@@ -216,8 +216,15 @@ public class Updater {
       Collections.sort(updateFiles, new Comparator<UpdateFile>() {
         @Override
         public int compare(UpdateFile file1, UpdateFile file2) {
-          if (!file1.getUpdateVersion().equals(file2))
-            return file1.getUpdateVersion().isNewerThan(file2.getUpdateVersion()) ? 1 : -1;
+          if (!file1.getUpdateVersion().equals(file2)) {
+            int result = file1.getUpdateVersion().isNewerThan(file2.getUpdateVersion()) ? 1 : -1;
+            if (result == 0) {
+            	return file2.getFile().getName().compareTo(file1.getFile().getName());
+            }
+            
+            return result;
+          }
+          
           return 0;
         }
       });
