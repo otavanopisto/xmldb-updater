@@ -107,12 +107,27 @@
   </build>
 
   <issueManagement>
-    <url>https://code.google.com/p/java-xmldb-updater/issues/</url>
-    <system>Google Code</system>
+    <url>https://github.com/otavanopisto/xmldb-updater/issues</url>
+    <system>GitHub</system>
   </issueManagement>
+  
+  <distributionManagement>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>otavanopisto-snapshots</id>
+      <name>Otavan Opisto Snapshots</name>
+      <url>http://maven.otavanopisto.fi:7070/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>otavanopisto-releases</id>
+      <name>Otavan Opisto Releases</name>
+      <url>http://maven.otavanopisto.fi:7070/nexus/content/repositories/releases</url>
+    </repository>
+  </distributionManagement>
 
   <scm>
-    <url>http://java-xmldb-updater.googlecode.com/svn</url>
+    <url>https://github.com/otavanopisto/xmldb-updater.git</url>
   </scm>
 
   <organization>
