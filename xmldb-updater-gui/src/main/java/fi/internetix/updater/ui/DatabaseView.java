@@ -39,13 +39,15 @@ public class DatabaseView extends VisualView {
     this.databaseCombobox.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
-        Database database = ((Database) e.getItem());
-        if (database.getDialect() != null) {
-          databaseUrl.setText(database.getDefaultUrl());
-          connectButton.setEnabled(true);
-        } else {
-          connectButton.setEnabled(false);
+        if (e.getItem() instanceof Database) {
+          Database database = ((Database) e.getItem());
+          if (database.getDialect() != null) {
+            databaseUrl.setText(database.getDefaultUrl());
+            connectButton.setEnabled(true);
+            return;
+          }
         }
+        connectButton.setEnabled(false);
       }
     });
     
