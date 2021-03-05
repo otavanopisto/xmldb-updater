@@ -8,14 +8,14 @@ import fi.internetix.updater.core.Settings;
 import fi.internetix.updater.core.Updater;
 
 public class UpdaterViewController {
-	
-	private static Logger logger = Logger.getLogger(UpdaterViewController.class);
+  
+  private static Logger logger = Logger.getLogger(UpdaterViewController.class);
 
-	public UpdaterViewController(Settings settings) {
+  public UpdaterViewController(Settings settings) {
     this.updater = new Updater(settings);
     if (!this.updater.testConnection()) {
-    	System.err.println("Could not connect to database");
-    	System.exit(-1);
+      System.err.println("Could not connect to database");
+      System.exit(-1);
     }
     
     view.showUi();
@@ -26,15 +26,15 @@ public class UpdaterViewController {
     checkForUpdates();
   }
 
-	public void checkForUpdates() {
-		List<String> updates = updater.checkForUpdates();
-		view.setUpdateListItems(updates.toArray(new String[0]));
-	}
+  public void checkForUpdates() {
+    List<String> updates = updater.checkForUpdates();
+    view.setUpdateListItems(updates.toArray(new String[0]));
+  }
 
-	public void performUpgrade(boolean executeSqls) {
-		updater.performUpgrade(executeSqls);
-	}
-	
+  public void performUpgrade(boolean executeSqls) {
+    updater.performUpgrade(executeSqls);
+  }
+  
   protected void exitApplication() {
     view.hideUi();
   }

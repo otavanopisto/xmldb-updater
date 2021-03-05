@@ -13,12 +13,12 @@ import fi.internetix.updater.ui.DatabaseViewController;
 
 public class Updater {
 
-	public static void main(String[] args) {
+  public static void main(String[] args) {
     loadDrivers();
     new DatabaseViewController();
-	} 
-	
-	private static void loadDrivers() {
+  } 
+  
+  private static void loadDrivers() {
     try {
       File driversFolder = new File("drivers");
       File[] files = driversFolder.listFiles(new FileFilter() {
@@ -30,11 +30,11 @@ public class Updater {
       
       if (files != null) {
         for (int i = 0, l = files.length; i < l; i++) {
-          addDriverJar(files[i].toURI().toURL());
+          addDriverJar(files[i]);
         }
       } else {
-      	System.err.println("Could not find any database drivers");
-      	System.exit(-1);
+        System.err.println("Could not find any database drivers");
+        System.exit(-1);
       }
 
     } catch (MalformedURLException e) {
@@ -42,12 +42,17 @@ public class Updater {
     }
   }
 
-  private static void addDriverJar(URL jarUrl) {
-    URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+  private static void addDriverJar(File jarFile) throws MalformedURLException {
+    URL jarUrl = jarFile.toURI().toURL();
     try {
-      Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] { URL.class});
-      method.setAccessible(true);
-      method.invoke(classLoader, new Object[] {jarUrl});
+      URLClassLoader sysLoader = new URLClassLoader(new URL[0]);
+
+      Method sysMethod = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{ URL.class });
+      sysMethod.setAccessible(true);
+      sysMethod.invoke(sysLoader, new Object[]{ jarUrl });
+
+      UpdaterAgent.addClassPath(jarFile);
+      
     } catch (SecurityException e) {
       throw new UpdaterException(e);
     } catch (NoSuchMethodException e) {
