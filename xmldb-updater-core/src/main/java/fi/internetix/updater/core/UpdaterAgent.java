@@ -1,4 +1,4 @@
-package fi.internetix.updater;
+package fi.internetix.updater.core;
 
 import java.io.File;
 import java.lang.instrument.Instrumentation;

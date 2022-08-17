@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import fi.internetix.updater.core.UpdaterAgent;
 import fi.internetix.updater.core.UpdaterException;
 import fi.internetix.updater.ui.DatabaseViewController;
 

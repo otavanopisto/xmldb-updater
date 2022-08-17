@@ -74,6 +74,9 @@
               <addClasspath>true</addClasspath>
               <mainClass>fi.internetix.updater.cmd.Updater</mainClass>
             </manifest>
+            <manifestEntries>
+              <Launcher-Agent-Class>fi.internetix.updater.core.UpdaterAgent</Launcher-Agent-Class>
+            </manifestEntries>
           </archive>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>

@@ -75,7 +75,7 @@
               <mainClass>fi.internetix.updater.Updater</mainClass>
             </manifest>
             <manifestEntries>
-              <Launcher-Agent-Class>fi.internetix.updater.UpdaterAgent</Launcher-Agent-Class>
+              <Launcher-Agent-Class>fi.internetix.updater.core.UpdaterAgent</Launcher-Agent-Class>
             </manifestEntries>
           </archive>
           <descriptorRefs>
