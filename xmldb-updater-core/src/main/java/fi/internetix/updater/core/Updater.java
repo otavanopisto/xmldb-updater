@@ -237,7 +237,7 @@ public class Updater {
     try {
       logger.info("Disabling foreign key checks");
       PreparedStatement statement = getConnection().prepareStatement("SET foreign_key_checks = 0");
-      statement.executeQuery();
+      statement.executeUpdate();
     } catch (SQLException e) {
       logger.error("Updater table does not exists. Adding create batch operation");
       e.printStackTrace();
@@ -250,7 +250,7 @@ public class Updater {
       logger.info("Enabling foreign key checks");
       // TODO: Setting foreign_key_checks to 1 does not trigger a scan of the existing table data. 
       PreparedStatement statement = getConnection().prepareStatement("SET foreign_key_checks = 1");
-      statement.executeQuery();
+      statement.executeUpdate();
     } catch (SQLException e) {
       logger.error("Updater table does not exists. Adding create batch operation");
       e.printStackTrace();
