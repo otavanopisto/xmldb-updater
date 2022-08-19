@@ -118,7 +118,7 @@
   
   <distributionManagement>
     <snapshotRepository>
-      <uniqueVersion>false</uniqueVersion>
+      <uniqueVersion>true</uniqueVersion>
       <id>otavanopisto-snapshots</id>
       <name>Otavan Opisto Snapshots</name>
       <url>https://nexus.muikkuverkko.fi/repository/otavanopisto-snapshots/</url>
