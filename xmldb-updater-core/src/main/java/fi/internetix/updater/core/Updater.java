@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.apache.xpath.XPathAPI;
 import org.hibernate.FetchMode;
 import org.hibernate.MappingException;
 import org.hibernate.dialect.Dialect;
@@ -48,17 +49,15 @@ import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.sun.org.apache.xpath.internal.XPathAPI;
-
 public class Updater {
 
-	private static Logger logger = Logger.getLogger(Updater.class);
+  private static Logger logger = Logger.getLogger(Updater.class);
 
-	public Updater(Settings settings) {
-		this.settings = settings;
-	}
-	
-	public void performUpgrade(boolean executeSqls) {
+  public Updater(Settings settings) {
+    this.settings = settings;
+  }
+  
+  public void performUpgrade(boolean executeSqls) {
     logger.info("Upgrading started");
     
     List<Document> documents;
@@ -103,26 +102,26 @@ public class Updater {
       logger.info("Upgrade succesful");
     }
   }
-	
-	public boolean testConnection() {
-		try {
-			Connection c = getConnection();
-			if (c != null) {
-				boolean closed = c.isClosed();
-				if (closed) {
-					logger.error("Database connection is closed");
-				} else {
-					return true;
-				}
-			} else {
-				logger.error("Could not obtain database connection");
-			}
-		} catch (SQLException e) {
-			logger.error(e);
-		}
-		
-		return false;
-	}
+  
+  public boolean testConnection() {
+    try {
+      Connection c = getConnection();
+      if (c != null) {
+        boolean closed = c.isClosed();
+        if (closed) {
+          logger.error("Database connection is closed");
+        } else {
+          return true;
+        }
+      } else {
+        logger.error("Could not obtain database connection");
+      }
+    } catch (SQLException e) {
+      logger.error(e);
+    }
+    
+    return false;
+  }
     
   private void executeUpdateOperation(String defaultCatalog, String defaultSchema, UpdateOperation updateOperation, boolean executeSqls) {
     String SQL = updateOperation.toSQL(getDialect(), defaultCatalog, defaultSchema);
@@ -141,7 +140,7 @@ public class Updater {
         logger.error("Error occured while running SQL query: " + e.getMessage());
         
         try {
-        	getConnection().rollback();
+          getConnection().rollback();
           throw new UpdaterException(e);
         } catch (SQLException e1) {
           throw new UpdaterException(e1);
@@ -219,7 +218,7 @@ public class Updater {
           if (!file1.getUpdateVersion().equals(file2)) {
             int result = file1.getUpdateVersion().isNewerThan(file2.getUpdateVersion()) ? 1 : -1;
             if (result == 0) {
-            	return file2.getFile().getName().compareTo(file1.getFile().getName());
+              return file2.getFile().getName().compareTo(file1.getFile().getName());
             }
             
             return result;
@@ -238,7 +237,7 @@ public class Updater {
     try {
       logger.info("Disabling foreign key checks");
       PreparedStatement statement = getConnection().prepareStatement("SET foreign_key_checks = 0");
-      statement.executeQuery();
+      statement.executeUpdate();
     } catch (SQLException e) {
       logger.error("Updater table does not exists. Adding create batch operation");
       e.printStackTrace();
@@ -251,7 +250,7 @@ public class Updater {
       logger.info("Enabling foreign key checks");
       // TODO: Setting foreign_key_checks to 1 does not trigger a scan of the existing table data. 
       PreparedStatement statement = getConnection().prepareStatement("SET foreign_key_checks = 1");
-      statement.executeQuery();
+      statement.executeUpdate();
     } catch (SQLException e) {
       logger.error("Updater table does not exists. Adding create batch operation");
       e.printStackTrace();
@@ -298,7 +297,7 @@ public class Updater {
       getConnection().commit();
     } catch (SQLException e) {
       try {
-      	getConnection().rollback();
+        getConnection().rollback();
         logger.error("Database version setting failed");
         throw new UpdaterException("Database version setting failed: " + e);
       } catch (SQLException e1) {
@@ -334,8 +333,8 @@ public class Updater {
   
   private void readMappings(UpgradeBatch upgradeBatch, Document document) throws TransformerException {
     try {
-    	// TODO: Refactor to mapping factory or something similar
-    	
+      // TODO: Refactor to mapping factory or something similar
+      
       NodeList childNodes = document.getDocumentElement().getChildNodes();
       for (int i = 0, l = childNodes.getLength(); i < l; i++) {
         if (childNodes.item(i) instanceof Element) {
@@ -808,26 +807,28 @@ public class Updater {
   }
   
   private Dialect getDialect() {
-  	if (dialect == null) {
-  	  try {
-				dialect = settings.getDialect().newInstance();
-			} catch (Exception e) {
-				System.err.println("Could not initialize dialect");
-				System.exit(-1);
-			}
-  	}
-  	
-  	return dialect;
+    if (dialect == null) {
+      try {
+        dialect = settings.getDialect().newInstance();
+      } catch (Exception e) {
+        System.err.println("Could not initialize dialect");
+        System.exit(-1);
+      }
+    }
+    
+    return dialect;
   }
   
   private Connection getConnection() throws SQLException {
-  	if (connection == null) {
-  		connection = DriverManager.getConnection(settings.getDatabaseUrl(), settings.getDatabaseUsername(), settings.getDatabasePassword());
-  		connection.setAutoCommit(false);
-  	}
-  	
-		return connection;
-	}
+    DriverManager.drivers().forEach(drv -> System.out.println("driver: " + drv.getMajorVersion()));
+    
+    if (connection == null) {
+      connection = DriverManager.getConnection(settings.getDatabaseUrl(), settings.getDatabaseUsername(), settings.getDatabasePassword());
+      connection.setAutoCommit(false);
+    }
+    
+    return connection;
+  }
 
   private class XMLFileFilter implements FileFilter {
     @Override
@@ -836,7 +837,7 @@ public class Updater {
     }
   }
   
-	private Settings settings;
+  private Settings settings;
   private UpgradeBatch upgradeBatch = new UpgradeBatch();
   private UpdateVersion currentVersion;
   private UpdateVersion newestVersion;

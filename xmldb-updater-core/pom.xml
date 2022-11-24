@@ -3,7 +3,7 @@
   <groupId>fi.internetix.xmldb-updater</groupId>
   <artifactId>xmldb-updater-core</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.1</version>
+  <version>3.0.0</version>
   <name>xmldb updater core library</name>
   <licenses>
     <license>
@@ -16,8 +16,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.build.timestamp.format>yyyyMMdd'T'HHmmss</maven.build.timestamp.format>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -34,17 +34,27 @@
       <version>2.9.1</version>
       <type>jar</type>
       <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>xalan</artifactId>
+      <version>2.7.2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-jdk14</artifactId>
-      <version>1.6.1</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
       <version>1.6.1</version>
       <type>jar</type>
       <scope>compile</scope>
@@ -55,6 +65,12 @@
       <version>3.5.1-Final</version>
       <type>jar</type>
       <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -66,20 +82,32 @@
   </dependencies>
 
   <build>
-    <finalName>${project.artifactId}</finalName>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>3.10.1</version>
         <configuration>
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Built-By></Built-By>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>      
 	  <plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-source-plugin</artifactId>
-		<version>2.2.1</version>
+		<version>3.2.1</version>
 		<executions>
 			<execution>
 				<id>attach-sources</id>
@@ -93,7 +121,7 @@
 	  <plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-javadoc-plugin</artifactId>
-		<version>2.9</version>
+		<version>3.4.1</version>
 		<executions>
 			<execution>
 				<id>attach-javadocs</id>
@@ -113,13 +141,13 @@
   
   <distributionManagement>
     <snapshotRepository>
-      <uniqueVersion>false</uniqueVersion>
+      <uniqueVersion>true</uniqueVersion>
       <id>otavanopisto-snapshots</id>
       <name>Otavan Opisto Snapshots</name>
       <url>https://nexus.muikkuverkko.fi/repository/otavanopisto-snapshots/</url>
     </snapshotRepository>
     <repository>
-      <uniqueVersion>false</uniqueVersion>
+      <uniqueVersion>true</uniqueVersion>
       <id>otavanopisto-releases</id>
       <name>Otavan Opisto Releases</name>
       <url>https://nexus.muikkuverkko.fi/repository/otavanopisto-releases/</url>
@@ -135,6 +163,6 @@
     <url>http://www.otavanopisto.fi</url>
   </organization>
 
-  <url>http://java-xmldb-updater.googlecode.com/</url>
+  <url>https://github.com/otavanopisto/xmldb-updater</url>
   <description>Database independent database update management tool core library</description>
 </project>

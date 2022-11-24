@@ -1,0 +1,1 @@
+Launcher-Agent-Class: fi.internetix.updater.core.UpdaterAgent

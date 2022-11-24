@@ -1,0 +1,27 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1 http://maven.apache.org/xsd/assembly-2.1.1.xsd">
+
+  <id>dist</id>
+  <includeBaseDirectory>true</includeBaseDirectory>
+
+  <formats>
+    <format>zip</format>
+  </formats>
+
+  <files>
+    <file>
+      <source>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</source>
+      <outputDirectory>/</outputDirectory>
+    </file>
+    <file>
+      <source>preferences.sample</source>
+      <outputDirectory>/</outputDirectory>
+    </file>
+    <file>
+      <source>src/assembly/README.txt</source>
+      <outputDirectory>/drivers/</outputDirectory>
+    </file>
+  </files>
+
+</assembly>

@@ -1,0 +1,1 @@
+Add your JDBC drivers into this folder (e.g. mysql- mysql-connector-java-x.x.xx-bin.jar)
