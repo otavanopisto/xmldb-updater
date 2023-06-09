@@ -20,6 +20,7 @@ import org.apache.log4j.PatternLayout;
 import org.hibernate.dialect.Dialect;
 
 import fi.internetix.updater.core.Database;
+import fi.internetix.updater.core.DatabaseDriverUtils;
 import fi.internetix.updater.core.Settings;
 import fi.internetix.updater.core.UpdaterAgent;
 import fi.internetix.updater.core.UpdaterException;
@@ -66,7 +67,10 @@ public class Updater {
       }
 
       String driverFolder = options.get(Option.DATABASE_DRIVERS_FOLDER);
-      loadDrivers(driverFolder);
+      if (!DatabaseDriverUtils.loadDrivers(driverFolder)) {
+        System.err.println("Could not find any database drivers");
+        System.exit(-1);
+      }
       
       File updatesFolder = new File(options.get(Option.UPDATES_FOLDER));
       Class<Dialect> dialect = Database.valueOf(options.get(Option.DATABASE_VENDOR)).getDialect();
@@ -188,49 +192,6 @@ public class Updater {
     }
   }
 
-  private static void loadDrivers(String driverFolder) {
-    try {
-      File driversFolder = new File(driverFolder);
-      File[] files = driversFolder.listFiles(new FileFilter() {
-        @Override
-        public boolean accept(File pathname) {
-          return pathname.getName().endsWith(".jar");
-        }
-      });
-      
-      for (int i = 0, l = files.length; i < l; i++) {
-        addDriverJar(files[i]);
-      }
-
-    } catch (MalformedURLException e) {
-      throw new UpdaterException(e);
-    }
-  }
-  
-  private static void addDriverJar(File jarFile) throws MalformedURLException {
-    URL jarUrl = jarFile.toURI().toURL();
-    try {
-      URLClassLoader sysLoader = new URLClassLoader(new URL[0]);
-
-      Method sysMethod = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{ URL.class });
-      sysMethod.setAccessible(true);
-      sysMethod.invoke(sysLoader, new Object[]{ jarUrl });
-
-      UpdaterAgent.addClassPath(jarFile);
-  
-    } catch (SecurityException e) {
-      throw new UpdaterException(e);
-    } catch (NoSuchMethodException e) {
-      throw new UpdaterException(e);
-    } catch (IllegalArgumentException e) {
-      throw new UpdaterException(e);
-    } catch (IllegalAccessException e) {
-      throw new UpdaterException(e);
-    } catch (InvocationTargetException e) {
-      throw new UpdaterException(e);
-    }
-  }
-  
   private static Option getOption(String optionName) {
     for (Option option : COMMAND_LINE_ARGUMENTS.keySet()) {
       String[] names = COMMAND_LINE_ARGUMENTS.get(option);
